@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <title>ABC LetterLoop</title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="stylesheet" href="">
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    </head>
+    <body>
+        <header>
+            <div>
+                <h1>Register to ABC LetterLoop</h1>
+            </div>
+        </header>
+        <main>
+            <form id="f-register">
+                <div>
+                    <label for="name">Name: </label>
+                    <input type="text" id="name" name="name" required>
+                </div>
+                <div>
+                    <label for="email">Email: </label>
+                    <input type="email" id="email" name="email" required>
+                </div>
+                <div>
+                    <label for="pw">Choose a password: </label>
+                    <input type="password" id="pw" name="pw" required>
+                </div>
+                <div>
+                    <label for="confirm-pw">Confirm password: </label>
+                    <input type="password" id="confirm_pw" name="confirm_pwpw" required>
+                </div>
+                <button type="submit">Register</button>
+            </form>
+        </main>
+        <footer>
+            <div>
+                Already have an account? <a href="/login">Login Here</a>
+            </div>
+            <div>
+                Or go back to the <a href="/">Home Page</a>
+            </div>
+        </footer>
+         
+        <script src="../static/account.js" async defer></script>
+    </body>
+</html>

@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <title>Ask {{ name }}</title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="stylesheet" href="">
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+        <script>
+            var issueID = "{{ issueID }}";
+        </script>
+    </head>
+    <body>
+        <header>
+            <div>
+                <h1>Add Questions to Issue: {{ name }}</h1>
+                <h2>Theme: {{ theme }}</h2>
+            </div>
+        </header>
+        <main>
+            <form id="f-ask">
+                <div id="qss">
+                    
+                </div>
+                <div>
+                    <label for="q">Question: </label>
+                    <input type="text" id="q" name="q">
+                    <button type="button" id="add-q">Add Question</button>
+                </div>
+                <button type="submit">Submit</button>
+            </form>
+        </main>
+        <footer>
+
+        </footer>
+        <script src="../static/ask.js" async defer></script>
+    </body>
+</html>

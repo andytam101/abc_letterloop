@@ -6,27 +6,32 @@
         <title>ABC Letterloop</title>
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <link rel="stylesheet" href="../static/index.css">
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
     </head>
     <body>
         <header>
             <div>
                 <h1>LetterLoop for the ABCs</h1>
-                <h2>Built by: Andy</h2>
+            </div>
+            <div>
+                <a href="/login">Login</a>
+                <a href="/register">Register</a>
             </div>
         </header>
         <nav>
-            <ul>             
-                <li><a href="/new">Home</a></li>
-                <li><a>New Issue</a></li>
-                <li><a>Ask a Question</a></li>
-                <li><a>Previous Issues</a></li>
+            <ul>       
+                <li><a href="/previous">Previous Issues</a></li>
+                <li><a href="/reply">Add Your Reply</a></li>
+                <li><a href="/">Home</a></li>                
+                <li><a href="/ask">Ask a Question</a></li>
+                <li><a href="/new">New Issue</a></li>      
             </ul>
         </nav>
         <main>
-            
+            <!-- Load result of latest Issue -->
         </main>
         <footer>
-
+            <div>Built by: Andy</div>
         </footer>
         <script src="../static/index.js" async defer></script>
     </body>
