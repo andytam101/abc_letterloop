@@ -1,4 +1,5 @@
 from flask import Flask, g, render_template, request, redirect, jsonify, session
+from db import db, User, Issue, Question, Answer
 import functools
 
 app = Flask(__name__)
@@ -88,5 +89,10 @@ def reply():
 def previous():
     # get db
     return render_template("previous.html")
+
+db.init_app(app)
+with app.app_context():
+    db.create_all()
+
 
 app.run(debug=True)
