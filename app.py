@@ -53,19 +53,31 @@ def latest():
     })
 
 
+def get_latest_issue(date):
+    return db.session.query(Issue).order_by(date.desc()).first()
+
+def get_user(userId):
+    return db.session.query(User).filter(User.userId == userId).first()
+
+def get_questions(issueId):
+    return db.session.query(Question).filter(Question.issueId == issueId).all()
+
+def get_answers(quesId):
+    return db.session.query(Answer).filter(Answer.quesId == quesId).all()
+
 @app.route("/new", methods=["GET", "POST"])
 @login_required
 def new():
+    d = get_latest_issue(Issue.q_dl)
     if request.method == "GET":
-        d = db.session.query(Issue.q_dl).order_by(Issue.q_dl.desc()).scalar()
-        new_issue = not (d is not None and datetime.now() < d)
+        new_issue = not (d is not None and datetime.now() < d.q_dl)
         return render_template("new.html", new_issue=new_issue)
     else:
         # do something  
         try:
-            d = db.session.query(Issue.q_dl).order_by(Issue.q_dl.desc()).scalar()
-            if d is not None and datetime.now() < d:
+            if d is not None and datetime.now() < d.q_dl:
                 return jsonify({"message": "ongoing"})
+            
             form = request.form                  
             ques_dl = datetime.strptime(form.get("q-dl"), '%Y-%m-%d')
             ans_dl = datetime.strptime(form.get("a-dl"), '%Y-%m-%d')
@@ -83,6 +95,11 @@ def new():
             )    
             
             db.session.add(new_issue)
+
+            users = db.query(User).all()
+            for user in users:
+                user.answered = False
+            
             db.session.commit()
             message = "success"
         except Exception as e:
@@ -169,14 +186,14 @@ def logout():
 @login_required
 def ask():    
     if request.method == "GET":
-        issue_info = db.session.query(Issue).order_by(Issue.q_dl.desc()).first()
-        username = db.session.query(User.name).filter(User.userId == issue_info.userId).scalar()
+        issue_info = get_latest_issue(Issue.q_dl)
+        user = get_user(issue_info.userId)
         if issue_info is None or issue_info.q_dl < datetime.now():
             return render_template("ask.html", valid=False)
-        return render_template("ask.html", 
+        return render_template("ask.html",
                                valid=True, name=issue_info.name, 
                                theme=issue_info.theme, issueId=issue_info.issueId,
-                               username=username, date=issue_info.date.strftime("%Y-%m-%d"), 
+                               username=user.name, date=issue_info.date.strftime("%Y-%m-%d"), 
                                q_dl=issue_info.q_dl.strftime("%Y-%m-%d")
                                )
     else:
@@ -216,7 +233,23 @@ def ask():
 def reply():    
     if request.method == "GET":
         # get db for all questions in latest issue
-        return render_template("reply.html")
+        issue_info = get_latest_issue(Issue.a_dl)
+        if issue_info is not None and (issue_info.a_dl < datetime.now() or issue_info.q_dl > datetime.now()):
+            return render_template("reply.html", valid=False)
+
+        questions_db = get_questions(issue_info.issueId)
+        questions = []
+        for q in questions_db:
+            questions.append({
+                "quesId": q.quesId,
+                "username": get_user(q.userId).name,
+                "content": q.content
+            })
+        
+        return render_template("reply.html", valid=True, questions=questions, issueId=issue_info.issueId,
+                                a_dl=issue_info.a_dl, date=issue_info.date, username=get_user(issue_info.userId).name,
+                                issueName=issue_info.name, theme=issue_info.theme
+                                )
     else:
         # do something
         return jsonify({

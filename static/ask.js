@@ -3,7 +3,8 @@ var n = 0
 
 $("#add-q").click(e => {
     e.preventDefault();
-    let new_q = $("#q").val();
+    let new_q = $("#q").val().trim();
+    if(new_q === "") return
     ques.push(new_q);
     n += 1;
     $("#qss").append(`

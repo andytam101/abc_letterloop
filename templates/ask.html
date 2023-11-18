@@ -9,28 +9,31 @@
         <link rel="stylesheet" href="">
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
         <script>
-            var issueId = "{{ issueId7 }}";
+            var issueId = "{{ issueId }}";
         </script>
     </head>
     <body>
+        <header>
+            <div>
+                <h1>Add Questions to Issue: {{ name }}</h1>
+            </div>
+        </header>
         {% if valid %}
-            <header>
+            <main>
                 <div>
-                    <h1>Add Questions to Issue: {{ name }}</h1>
+                    <h2>Issue No. {{ issueId }}: {{ name }}</h2>
                 </div>
                 <div>
                     {% if theme == "" %}
-                        <h2>No Theme</h2>
+                        <h3>No Theme</h3>
                     {% else %}
-                        <h2>Theme: {{ theme }}</h2>
+                        <h3>Theme: {{ theme }}</h3>
                     {% endif %}
                     <h2>Created by: {{ username }} on {{ date }}</h2>
                 </div>
                 <div>
-                    <h3>Deadline for questions: {{ q_dl }}</h3>
+                    <h4>Deadline for questions: {{ q_dl }}</h4>
                 </div>
-            </header>
-            <main>
                 <form id="f-ask">
                     <div id="qss">
                         
@@ -45,7 +48,7 @@
             </main>
         {% else %}
             <main>
-                <div> There is no ongoing issue or the deadline for asking questions has passed.</div>
+                <div>There is no ongoing issue or the deadline for asking questions has passed.</div>
                 <div>Go over to <a href="new.html">New Issue</a> to create a new one!</div>
             </main>
         {% endif %}

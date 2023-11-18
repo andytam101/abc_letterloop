@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <title></title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="stylesheet" href="">
+    </head>
+    <body>
+        <header>
+            <div><h1>Write your Reply</h1></div>
+        </header>
+        <main>
+            {% if valid %}
+                <div>
+                    <h2>Issue No. {{ issueId }}: {{ issueName}}</h2>
+                </div>
+                <div>
+                    {% if theme == "" %}
+                        <h3>No Theme</h3>
+                    {% else %}
+                        <h3>Theme: {{ theme }}</h3>
+                    {% endif %}
+                    <h3>Created by: {{ username }} on {{ date }}</h3>
+                </div>
+                <div>
+                    <h4>Deadline for answers: {{ a_dl }}</h4>
+                </div>
+                <form>
+                    {% for q in questions %}
+                        <div>
+                            <label for="q-{{ q['quesId'] }}">{{ q['username'] }} asked: {{ q['content'] }}</label>
+                            <input type="text" id="q-{{ q['quesId'] }}" name="q-{{ q['quesId'] }}">
+                        </div>
+                    {% endfor %}
+                    <button type="submit">Submit</button>
+                </form>
+            {% else %}
+                <div>
+                    <h2>There is no ongoing issue for answers yet! </h2>
+                    <h2>Go ask some questions <a href="/ask">here</a> or create a new issue <a href="/new">here</a></h2>
+                </div>
+            {% endif %}
+        </main>
+        <footer>
+            <div>
+                <a href="/">Home</a>
+            </div>
+        </footer>
+        <script src="" async defer></script>
+    </body>
+</html>
