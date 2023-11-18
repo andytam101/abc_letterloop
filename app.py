@@ -234,8 +234,8 @@ def reply():
     if request.method == "GET":
         # get db for all questions in latest issue
         issue_info = get_latest_issue(Issue.a_dl)
-        if issue_info is not None and (issue_info.a_dl < datetime.now() or issue_info.q_dl > datetime.now()):
-            return render_template("reply.html", valid=False)
+        # if issue_info is not None and (issue_info.a_dl < datetime.now() or issue_info.q_dl > datetime.now()):
+        #     return render_template("reply.html", valid=False)
 
         questions_db = get_questions(issue_info.issueId)
         questions = []
@@ -251,9 +251,24 @@ def reply():
                                 issueName=issue_info.name, theme=issue_info.theme
                                 )
     else:
-        # do something
+        try:
+            for key, value in request.form.items():
+                quesId = int(key[2:])
+                new_ans = Answer(
+                    content = value,
+                    userId = g.user.userId,
+                    quesId = quesId
+                )
+                db.session.add(new_ans)
+            db.session.commit()
+            message = "success"
+        
+        except Exception as e:
+            print(e)
+            message = "fail"
+
         return jsonify({
-            "message": "success"
+            "message": message
         })
 
 

@@ -7,6 +7,10 @@
         <meta name="description" content="">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <link rel="stylesheet" href="">
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+        <script>
+            var issueId = "{{ issueId }}";
+        </script>
     </head>
     <body>
         <header>
@@ -28,7 +32,7 @@
                 <div>
                     <h4>Deadline for answers: {{ a_dl }}</h4>
                 </div>
-                <form>
+                <form id="f-reply">
                     {% for q in questions %}
                         <div>
                             <label for="q-{{ q['quesId'] }}">{{ q['username'] }} asked: {{ q['content'] }}</label>
@@ -49,6 +53,6 @@
                 <a href="/">Home</a>
             </div>
         </footer>
-        <script src="" async defer></script>
+        <script src="../static/reply.js" async defer></script>
     </body>
 </html>
