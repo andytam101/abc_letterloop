@@ -20,8 +20,8 @@ def main():
         name = g.user.name
         
     issue = get_latest_issue(Issue.a_dl)
-    # if issue.a_dl >= datetime.now():
-    #     return render_template("index.html", logged_in=logged_in, name=name,valid=False)
+    if issue.a_dl >= datetime.now():
+        return render_template("index.html", logged_in=logged_in, name=name,valid=False)
     
     qs = get_questions(issue.issueId)
     questions = []

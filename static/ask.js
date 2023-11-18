@@ -18,7 +18,7 @@ $("#add-q").click(e => {
     n += 1;
     $("#qss").append(`
         <div id="q-${n}" class="row justify-content-center mb-1">
-            <div class="col-lg-6 col-8 border me-2 questions text-wrap">${new_q}</div>
+            <div class="col-lg-6 col-8 border me-2 vertical-center text-wrap">${new_q}</div>
             <button class="col-lg-2 col-3 btn btn-danger" type="button" id="del-q-${n}" class="del-q" onclick="handleDelQ('q-${n}')">Remove</button>
         </div>        
     `);
