@@ -13,10 +13,16 @@
             <div>
                 <h1>LetterLoop for the ABCs</h1>
             </div>
-            <div>
-                <a href="/login">Login</a>
-                <a href="/register">Register</a>
+            <div id="status">
+                {% if logged_in %}
+                    <p>{{ name }}</p>
+                    <a href="/logout">Logout</a>
+                {% else %}
+                    <a href="/login">Login</a>
+                    <a href="/register">Register</a>
+                {% endif %}
             </div>
+
         </header>
         <nav>
             <ul>       

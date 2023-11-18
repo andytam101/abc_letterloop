@@ -11,7 +11,13 @@ class EmailException(Exception):
 
 @app.route("/", methods=["GET"])
 def main():
-    return render_template("index.html")
+    if g.user is None:
+        logged_in = False
+        name = None
+    else:
+        logged_in = True
+        name = g.user.name
+    return render_template("index.html", logged_in=logged_in, name=name)
 
 
 def login_required(view):
@@ -22,6 +28,7 @@ def login_required(view):
         return view(**kwargs)
     
     return wrapped_view
+
 
 @app.before_request
 def load_logged_in_user():
@@ -95,6 +102,7 @@ def login():
         return render_template("login.html")
     else:
         # do something
+        userId = None
         try:
             email = request.form.get("email")
             password = request.form.get("pw")
@@ -114,7 +122,8 @@ def login():
             message = "fail"
             print(e)
         return jsonify({
-            "message": message
+            "message": message,
+            "userId": userId
         })
 
 
