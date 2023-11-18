@@ -174,7 +174,16 @@ def logout():
 @login_required
 def ask():    
     if request.method == "GET":
-        return render_template("ask.html", name="Test", theme="test2", issueID="t")
+        issue_info = db.session.query(Issue).order_by(Issue.q_dl.desc()).first()
+        username = db.session.query(User.name).filter(User.userId == issue_info.userId).scalar()
+        if issue_info is None or issue_info.q_dl < datetime.now():
+            return render_template("ask.html", valid=False)
+        return render_template("ask.html", 
+                               valid=True, name=issue_info.name, 
+                               theme=issue_info.theme, issueID=issue_info.issueId,
+                               username=username, date=issue_info.date.strftime("%Y-%m-%d"), 
+                               q_dl=issue_info.q_dl.strftime("%Y-%m-%d")
+                               )
     else:
         # do something
         return jsonify({
