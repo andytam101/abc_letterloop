@@ -3,7 +3,7 @@
     <head>
         <meta charset="utf-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
-        <title>Ask {{ name }}</title>
+        <title>Ask a Question</title>
         <meta name="description" content="">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
@@ -17,7 +17,7 @@
     <body>
         <main>
             {% if valid %}
-                <div class="container border p-4 mt-5">
+                <div class="container border p-4 mt-5 border-bottom-0">
                     <div class="row justify-content-center">
                         <div class="col-lg-6 col-12 text-center">
                             <div class="h1">Issue No. {{ issueId }}: {{ name }}</div>
@@ -55,12 +55,12 @@
                                 </div>
                                 <div class="col-lg-6 col-8">
                                     <div class="d-flex flex-column flex-lg-row align-items-lg-center">
-                                        <input type="text" id="q" name="q" class="form-control mb-2 mb-lg-0">
+                                        <input type="text" placeholder="Type your question" id="q" name="q" class="form-control mb-2 mb-lg-0">
                                         <button type="button" class="btn btn-secondary ms-lg-2" id="add-q">Add</button>
                                     </div>
                                 </div>
                             </form>
-                            <div class="row justify-content-center mt-4">
+                            <div class="row justify-content-center mt-4 pb-2">
                                 <div class="text-center mb-3">
                                     <button type="submit" form="f-ask" class="btn btn-primary">Submit</button>
                                 </div>
@@ -83,8 +83,18 @@
             {% endif %}
         </main>
         <footer>
-            <div class="text-center mt-4 fw-light">
-                <a href="/">Home</a>
+            <div class="container">
+                <div class="row">
+                    {% if valid %}
+                        <div class="text-center pt-2 pb-4 fw-light border border-top-0">
+                            <a href="/">Home</a>
+                        </div>
+                    {% else %}
+                        <div class="text-center pt-2 pb-4 fw-light mt-3">
+                            <a href="/">Home</a>
+                        </div>
+                    {% endif %}
+                </div>
             </div>
         </footer>
         <script src="../static/ask.js" async defer></script>

@@ -36,7 +36,7 @@ def main():
         })
     
     return render_template("index.html", logged_in=logged_in, name=name,valid=True,
-                            questions=questions, theme=issue.theme, username=issue.name, date=issue.date.strftime("%Y-%m-%d"),
+                            questions=questions, theme=issue.theme, username=get_user(issue.userId).name, date=issue.date.strftime("%Y-%m-%d"),
                             issueId=issue.issueId, issueName=issue.name
                            )
 
