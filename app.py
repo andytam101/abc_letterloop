@@ -66,12 +66,7 @@ def new():
             d = db.session.query(Issue.q_dl).order_by(Issue.q_dl.desc()).scalar()
             if d is not None and datetime.now() < d:
                 return jsonify({"message": "ongoing"})
-            form = request.form  
-            if form.get("theme") == "":
-                theme = None
-            else:
-                theme = form.get("theme")
-                
+            form = request.form                  
             ques_dl = datetime.strptime(form.get("q-dl"), '%Y-%m-%d')
             ans_dl = datetime.strptime(form.get("a-dl"), '%Y-%m-%d')
             
@@ -81,7 +76,7 @@ def new():
             # validate dates here
             new_issue = Issue(
                 name = form.get("name"),
-                theme = theme,
+                theme = form.get("theme"),
                 q_dl = ques_dl,
                 a_dl = ans_dl,
                 userId = g.user.userId
@@ -180,14 +175,39 @@ def ask():
             return render_template("ask.html", valid=False)
         return render_template("ask.html", 
                                valid=True, name=issue_info.name, 
-                               theme=issue_info.theme, issueID=issue_info.issueId,
+                               theme=issue_info.theme, issueId=issue_info.issueId,
                                username=username, date=issue_info.date.strftime("%Y-%m-%d"), 
                                q_dl=issue_info.q_dl.strftime("%Y-%m-%d")
                                )
     else:
-        # do something
+        # do something  
+        try: 
+            jsonData = request.json  
+            questions = jsonData["questions"]      
+            issueId = jsonData["issueId"]
+            userId = g.user.userId
+            
+            if db.session.query(Issue.q_dl).filter(Issue.issueId == issueId).scalar() < datetime.now():
+                return jsonify({
+                    "message": "deadline"
+                })
+            else:
+                for q in questions:
+                    new_q = Question(
+                        content = q,
+                        issueId = issueId,
+                        userId = userId,
+                    )
+                    db.session.add(new_q)
+            
+                db.session.commit()
+                message = "success"
+        except Exception as e:
+            print(e)
+            message = "fail"
+              
         return jsonify({
-            "message": "success"
+            "message": message
         })
     
 

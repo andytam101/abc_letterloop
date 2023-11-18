@@ -9,7 +9,7 @@
         <link rel="stylesheet" href="">
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
         <script>
-            var issueID = "{{ issueID }}";
+            var issueId = "{{ issueId7 }}";
         </script>
     </head>
     <body>
@@ -19,7 +19,11 @@
                     <h1>Add Questions to Issue: {{ name }}</h1>
                 </div>
                 <div>
-                    <h2>Theme: {{ theme }}</h2>
+                    {% if theme == "" %}
+                        <h2>No Theme</h2>
+                    {% else %}
+                        <h2>Theme: {{ theme }}</h2>
+                    {% endif %}
                     <h2>Created by: {{ username }} on {{ date }}</h2>
                 </div>
                 <div>

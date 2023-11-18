@@ -27,7 +27,7 @@ $("#f-ask").submit(e => {
         method: "POST",
         body: JSON.stringify({
             "questions": ques,
-            "issueID": issueID,
+            "issueId": issueId, 
         }),
         headers: {
             "Content-type": "application/JSON; charset=UTF-8"
