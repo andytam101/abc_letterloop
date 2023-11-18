@@ -1,4 +1,5 @@
 from flask import Flask, g, render_template, request, redirect, jsonify, session
+from datetime import datetime
 from db import db, User, Issue, Question, Answer
 import functools
 
@@ -56,10 +57,46 @@ def latest():
 @login_required
 def new():
     if request.method == "GET":
-        return render_template("new.html")
+        d = db.session.query(Issue.q_dl).order_by(Issue.q_dl.desc()).scalar()
+        new_issue = not (d is not None and datetime.now() < d)
+        return render_template("new.html", new_issue=new_issue)
     else:
-        # do something
-        return redirect("/")
+        # do something  
+        try:
+            d = db.session.query(Issue.q_dl).order_by(Issue.q_dl.desc()).scalar()
+            if d is not None and datetime.now() < d:
+                return jsonify({"message": "ongoing"})
+            form = request.form  
+            if form.get("theme") == "":
+                theme = None
+            else:
+                theme = form.get("theme")
+                
+            ques_dl = datetime.strptime(form.get("q-dl"), '%Y-%m-%d')
+            ans_dl = datetime.strptime(form.get("a-dl"), '%Y-%m-%d')
+            
+            if(not (datetime.now() < ques_dl < ans_dl)):
+                return jsonify({"message": "dates"})
+            
+            # validate dates here
+            new_issue = Issue(
+                name = form.get("name"),
+                theme = theme,
+                q_dl = ques_dl,
+                a_dl = ans_dl,
+                userId = g.user.userId
+            )    
+            
+            db.session.add(new_issue)
+            db.session.commit()
+            message = "success"
+        except Exception as e:
+            print(e)
+            message = "fail"
+        
+        return jsonify({
+            "message": message
+        })
 
 
 @app.route("/register", methods=["GET", "POST"])

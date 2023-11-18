@@ -1,4 +1,5 @@
 from flask_sqlalchemy import SQLAlchemy
+from datetime import datetime
 from sqlalchemy import Integer, String, Boolean, DateTime
 
 db = SQLAlchemy()
@@ -13,22 +14,24 @@ class User(db.Model):
     answered = db.relationship('Answer', backref='user', lazy=False)
 
 class Question(db.Model):
-    quesId = db.Column(Integer, primary_key=True)
+    quesId = db.Column(Integer, primary_key=True, autoincrement=True)
     content = db.Column(String, nullable=False)
     issueId = db.Column(Integer, db.ForeignKey('issue.issueId'), nullable=False)
     userId = db.Column(Integer, db.ForeignKey('user.userId'), nullable=False)
     answer_to = db.relationship('Answer', backref='question', lazy=False)
 
 class Issue(db.Model):
-    issueId = db.Column(Integer, primary_key=True)
+    issueId = db.Column(Integer, primary_key=True, autoincrement=True)
+    name = db.Column(String, nullable=False)
     theme = db.Column(String)
+    date = db.Column(DateTime, default=datetime.now)
     q_dl = db.Column(DateTime, nullable=False)
     a_dl = db.Column(DateTime, nullable=False)
     userId = db.Column(Integer, db.ForeignKey('user.userId'))
     questions = db.relationship('Question', backref='issue', lazy=False)
 
 class Answer(db.Model):
-    answerId = db.Column(Integer, primary_key=True)
+    answerId = db.Column(Integer, primary_key=True, autoincrement=True)
     content = db.Column(String, nullable=False)
     userId = db.Column(Integer, db.ForeignKey('user.userId'), nullable=False)
     quesId = db.Column(Integer, db.ForeignKey('question.quesId'), nullable=False)

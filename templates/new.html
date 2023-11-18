@@ -7,37 +7,42 @@
         <meta name="description" content="">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <link rel="stylesheet" href="../static/index.css">
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
     </head>
     <body>
+        
         <header>
             <div>
                 <h1>Create New Issue</h1>
             </div>
         </header>
+        
         <main>
-            <form action="/new" method="POST">
+            {% if new_issue %}
+            <form id="f-new">
                 <div>
-                    <label for="lname">Issue name:</label>
-                    <input type="text" id="lname" placeholder="Enter name" required>
+                    <label for="name">Issue name:</label>
+                    <input type="text" id="nname" placeholder="Enter name" required name="name">
                 </div>
                 <div>
                     <label for="theme">Theme: </label>
                     <input type="text" placeholder="Optional" id="theme" name="theme"> 
                 </div>
                 <div>
-                    <label for="dl-qs">Deadline for submitting questions:</label>
-                    <input type="date" id="dl-qs" name="dl-qs">
+                    <label for="q-dl">Deadline for submitting questions:</label>
+                    <input type="date" id="q-dl" name="q-dl">
                 </div>
                 <div>
-                    <label for="dl-as">Deadline for submitting answers:</label>
-                    <input type="date" id="dl-as" name="dl-as">
+                    <label for="a-dl">Deadline for submitting answers:</label>
+                    <input type="date" id="a-dl" name="a-dl">
                 </div>
-                <!-- <div>
-                    <label for="max_qs">Maximum number of questions:</label>
-                    <input type="number" min="1" name="max_qs" id="max_qs">
-                </div> -->
                 <button type="submit" id="create-btn">Create</button>
             </form>
+            {% else %}
+                <div>
+                    <h2>There is ongoing issue. Create a new one later.</h2>
+                </div>
+            {% endif %}
         </main>
         <footer>
             <div>
@@ -45,6 +50,6 @@
             </div>
         </footer>
                 
-        <script src="../static/index.js" async defer></script>
+        <script src="../static/new.js" async defer></script>
     </body>
 </html>
