@@ -35,9 +35,39 @@
         </nav>
         <main>
             <!-- Load result of latest Issue -->
+            <div>Read the latest issue</div>
+            {% if valid %}
+                <article>
+                    <div>
+                        <h1>Issue No. {{ issueId }}: {{ issueName }}</h1>
+                    </div>
+                    <div>
+                        {% if theme == "" %}
+                            <h2>No Theme</h2>  
+                        {% else %}
+                            <h2>Theme: {{ theme }}</h2>
+                        {% endif %}
+                        <h2>Created by: {{ username }} on {{ date }}</h2>
+                    </div>
+                    <div>
+                        {% for q in questions %}
+                            <div>
+                                <div>{{ q['name'] }} asked: {{ q['content'] }}</div>
+                                <div>
+                                    {% for a in q['answers'] %}
+                                        <div>{{ a['name'] }} replied: {{ a['content'] }}</div>
+                                    {% endfor %}
+                                </div>
+                            </div>
+                        {% endfor %}
+                    </div>
+                </article>
+            {% else %}
+                <div> There hasn't been an issue yet. </div>
+            {% endif %}
         </main>
         <footer>
-            <div>Built by: Andy</div>
+            <div>Website built by: Andy</div>
         </footer>
         <script src="../static/index.js" async defer></script>
     </body>

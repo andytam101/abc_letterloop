@@ -18,8 +18,27 @@ def main():
     else:
         logged_in = True
         name = g.user.name
-    return render_template("index.html", logged_in=logged_in, name=name)
-
+        
+    issue = get_latest_issue(Issue.a_dl)
+    # if issue.a_dl >= datetime.now():
+    #     return render_template("index.html", logged_in=logged_in, name=name,valid=False)
+    
+    qs = get_questions(issue.issueId)
+    questions = []
+    for q in qs:
+        this_ans = []
+        for a in get_answers(q.quesId):
+            this_ans.append({"name": get_user(a.userId).name, "content": a.content})
+        questions.append({
+            "name": get_user(q.userId).name,
+            "content": q.content,
+            "answers": this_ans 
+        })
+    
+    return render_template("index.html", logged_in=logged_in, name=name,valid=True,
+                            questions=questions, theme=issue.theme, username=issue.name, date=issue.date.strftime("%Y-%m-%d"),
+                            issueId=issue.issueId, issueName=issue.name
+                           )
 
 def login_required(view):
     @functools.wraps(view)
@@ -64,6 +83,7 @@ def get_questions(issueId):
 
 def get_answers(quesId):
     return db.session.query(Answer).filter(Answer.quesId == quesId).all()
+
 
 @app.route("/new", methods=["GET", "POST"])
 @login_required
@@ -210,10 +230,12 @@ def ask():
                 })
             else:
                 for q in questions:
+                    if q.strip() == "":
+                        continue
                     new_q = Question(
-                        content = q,
+                        content = q.strip(),
                         issueId = issueId,
-                        userId = userId,
+                        userId = userId
                     )
                     db.session.add(new_q)
             
@@ -247,12 +269,15 @@ def reply():
             })
         
         return render_template("reply.html", valid=True, questions=questions, issueId=issue_info.issueId,
-                                a_dl=issue_info.a_dl, date=issue_info.date, username=get_user(issue_info.userId).name,
+                                a_dl=issue_info.a_dl.strftime("%Y-%m-%d"), date=issue_info.date.strftime("%Y-%m-%d"), username=get_user(issue_info.userId).name,
                                 issueName=issue_info.name, theme=issue_info.theme
                                 )
     else:
         try:
             for key, value in request.form.items():
+                value = value.strip()
+                if value == "":
+                    continue
                 quesId = int(key[2:])
                 new_ans = Answer(
                     content = value,
