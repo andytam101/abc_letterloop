@@ -8,9 +8,9 @@ $("#add-q").click(e => {
     ques.push(new_q);
     n += 1;
     $("#qss").append(`
-        <div id="q-${n}">
-            <div>${new_q}</div>
-            <button type="button" id="del-q-${n}" class="del-q" onclick="handleDelQ('q-${n}')">X</button>
+        <div id="q-${n}" class="row justify-content-center mb-1">
+            <div class="col-lg-5 col-8 border me-2 questions">${new_q}</div>
+            <button class="col-lg-2 col-3 btn btn-danger" type="button" id="del-q-${n}" class="del-q" onclick="handleDelQ('q-${n}')">Remove</button>
         </div>        
     `);
     $("#q").val("");

@@ -58,20 +58,6 @@ def load_logged_in_user():
     else:
         g.user = db.session.query(User).filter(User.userId == user_id).first()
 
-
-@app.route("/latest", methods=["GET"])
-def latest():
-    # lookup db
-    # return a dictionary with following keys:
-    # title, theme, created_by, questions, replies
-    # questions :: [String]
-    # replies :: [(String, String)]; first string is name, second is the answer
-    
-    return jsonify({
-        
-    })
-
-
 def get_latest_issue(date):
     return db.session.query(Issue).order_by(date.desc()).first()
 

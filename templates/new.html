@@ -3,50 +3,58 @@
     <head>
         <meta charset="utf-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
-        <title>ABC New Issue</title>
+        <title>ABC New Newsletter</title>
         <meta name="description" content="">
         <meta name="viewport" content="width=device-width, initial-scale=1">
-        <link rel="stylesheet" href="../static/index.css">
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
     </head>
     <body>
         
         <header>
-            <div>
-                <h1>Create New Issue</h1>
+            <div class="m-5">
+                <h1 class="h1 text-center">Create Newsletter</h1>
             </div>
         </header>
         <main>
             {% if new_issue %}
-            <form id="f-new">
-                <div>
-                    <label for="name">Issue name:</label>
-                    <input type="text" id="nname" placeholder="Enter name" required name="name">
+            <div class="container mt-5">
+                <div class="row justify-content-center">
+                    <div class="col-lg-6 col-10 border p-4">
+                        <form id="f-new">
+                            <div class="form-group mb-3">
+                                <label for="name">Newsletter name:</label>
+                                <input type="text" id="name" placeholder="Choose name" required name="name" class="form-control">
+                            </div>
+                            <div class="form-group mb-3">
+                                <label for="theme">Theme: </label>
+                                <input type="text" placeholder="Optional" id="theme" name="theme" class="form-control"> 
+                            </div>
+                            <div class="form-group mb-3">
+                                <label for="q-dl">Deadline for submitting questions:</label>
+                                <input type="date" id="q-dl" name="q-dl" class="form-control">
+                            </div>
+                            <div class="form-group mb-3">
+                                <label for="a-dl">Deadline for submitting answers:</label>
+                                <input type="date" id="a-dl" name="a-dl" class="form-control">
+                            </div>
+                            <button type="submit" class="btn btn-primary mt-2" id="create-btn">Create</button>
+                        </form>
+                    </div>
                 </div>
-                <div>
-                    <label for="theme">Theme: </label>
-                    <input type="text" placeholder="Optional" id="theme" name="theme"> 
-                </div>
-                <div>
-                    <label for="q-dl">Deadline for submitting questions:</label>
-                    <input type="date" id="q-dl" name="q-dl">
-                </div>
-                <div>
-                    <label for="a-dl">Deadline for submitting answers:</label>
-                    <input type="date" id="a-dl" name="a-dl">
-                </div>
-                <button type="submit" id="create-btn">Create</button>
-            </form>
+            </div>
+            
             {% else %}
-                <div>
-                    <h2>There is an ongoing issue. Create a new one later.</h2>
-                    <h2>Ask some questions for the current issue <a href="ask">here</a>.</h2>
+                <div class="text-center">
+                    <p class="mb-0">There is an already an ongoing newsletter. Create a new one later.</p>
+                    <p>Ask some questions for the current one <a href="ask">here</a>.</p>
                     
                 </div>
             {% endif %}
         </main>
         <footer>
-            <div>
+            <div class="text-center fw-light mt-4">
                 <a href="/">Home</a>
             </div>
         </footer>

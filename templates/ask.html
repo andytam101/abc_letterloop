@@ -6,54 +6,84 @@
         <title>Ask {{ name }}</title>
         <meta name="description" content="">
         <meta name="viewport" content="width=device-width, initial-scale=1">
-        <link rel="stylesheet" href="">
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+        <link href="../static/index.css" rel="stylesheet">
         <script>
             var issueId = "{{ issueId }}";
         </script>
     </head>
     <body>
-        <header>
-            <div>
-                <h1>Add Questions to Issue: {{ name }}</h1>
-            </div>
-        </header>
-        {% if valid %}
-            <main>
-                <div>
-                    <h2>Issue No. {{ issueId }}: {{ name }}</h2>
-                </div>
-                <div>
-                    {% if theme == "" %}
-                        <h3>No Theme</h3>
-                    {% else %}
-                        <h3>Theme: {{ theme }}</h3>
-                    {% endif %}
-                    <h2>Created by: {{ username }} on {{ date }}</h2>
-                </div>
-                <div>
-                    <h4>Deadline for questions: {{ q_dl }}</h4>
-                </div>
-                <form id="f-ask">
-                    <div id="qss">
+        <main>
+            {% if valid %}
+                <div class="container border p-4 mt-5">
+                    <div class="row justify-content-center">
+                        <div class="col-lg-6 col-12 text-center">
+                            <div class="h1">Issue No. {{ issueId }}: {{ name }}</div>
+                        </div>
+                    </div>
+                    <div class="row justify-content-center mt-1 fs-5 fw-light">
+                        <div class="col-4 col-lg-2 text-start fst-italic">
+                            <div>Created by: {{ username }}</div>
+                        </div>
+                        <div class="col-4 col-lg-2 text-center fw-normal">
+                            {% if theme == "" %}
+                                <div>No Theme</div>
+                            {% else %}
+                                <div>Theme: {{ theme }}</div>
+                            {% endif %}
+                        </div>
                         
+                        <div class="col-4 col-lg-2 text-end fst-italic">
+                            {{ date }}
+                        </div>
                     </div>
-                    <div>
-                        <label for="q">Question: </label>
-                        <input type="text" id="q" name="q">
-                        <button type="button" id="add-q">Add Question</button>
+                    <div class="row justify-content-center mt-4">
+                        <div class="col-lg-8 col-12 border ">
+                            <div class="row justify-content-center">
+                                <div class="col-12 col-lg-6 text-center mt-3 h4 text-decoration-underline">
+                                    Questions
+                                </div>
+                            </div>
+                            <div id="qss" class="row justify-content-center mt-3">
+                                
+                            </div>
+                            <form id="f-ask" class="row justify-content-center mt-3">
+                                <div class="col-lg-2 col-12 text-center align-items-center mb-2 mb-lg-0">
+                                    <label for="q" class="fs-5 fw-bold">Question:</label>
+                                </div>
+                                <div class="col-lg-6 col-8">
+                                    <div class="d-flex flex-column flex-lg-row align-items-lg-center">
+                                        <input type="text" id="q" name="q" class="form-control mb-2 mb-lg-0">
+                                        <button type="button" class="btn btn-secondary ms-lg-2" id="add-q">Add</button>
+                                    </div>
+                                </div>
+                            </form>
+                            <div class="row justify-content-center mt-4">
+                                <div class="text-center mb-3">
+                                    <button type="submit" form="f-ask" class="btn btn-primary">Submit</button>
+                                </div>
+                            </div>
+                        </div>
                     </div>
-                    <button type="submit">Submit</button>
-                </form>
-            </main>
-        {% else %}
-            <main>
-                <div>There is no ongoing issue or the deadline for asking questions has passed.</div>
-                <div>Go over to <a href="new.html">New Issue</a> to create a new one!</div>
-            </main>
-        {% endif %}
+                <div>
+            {% else %}
+                <div class="container text-center mt-5">
+                    <div class="row justify-content-center">
+                        <div class="col-12 col-lg-6 h1 text-center mb-5">Ask a Question</div>
+                    </div>
+                    <div class="row justify-content-center">
+                        <div class="col-12 col-lg-6">There is no ongoing issue or the deadline for asking questions has passed.</div>
+                    </div>
+                    <div class="row justify-content-center">
+                        <div class="col-12 col-lg-6">Go over to <a href="new.html">New Issue</a> to create a new one!</div>
+                    </div>
+                </div>
+            {% endif %}
+        </main>
         <footer>
-            <div>
+            <div class="text-center mt-4 fw-light">
                 <a href="/">Home</a>
             </div>
         </footer>
