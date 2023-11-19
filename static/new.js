@@ -21,7 +21,7 @@ $("#f-new").submit(e => {
                 window.alert("Invalid dates. Deadline for answers must be after questions.")
             }
             else if(json.message === "ongoing"){
-                window.alert("There is an ongoing issue. Go ask questions there!")
+                window.alert("There is an ongoing newletter. Go ask questions there!")
             }
             else{
                 window.alert("Something went wrong.")
