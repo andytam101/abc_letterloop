@@ -19,22 +19,22 @@
             {% if valid %}
                 <div class="container border p-4 mt-5 border-bottom-0">
                     <div class="row justify-content-center">
-                        <div class="col-lg-6 col-12 text-center">
+                        <div class="col-lg-12 col-12 text-center mb-2">
                             <div class="h1">Issue No. {{ issueId }}: {{ name }}</div>
                         </div>
                     </div>
-                    <div class="row justify-content-center mt-1 fs-5 fw-light">
-                        <div class="col-4 col-lg-3 text-start fst-italic">
+                    <div class="row justify-content-center mt-1 fw-light">
+                        <div class="col-3 col-lg-2 text-start fst-italic fs-6">
                             <div>Created by: {{ username }}</div>
                         </div>
-                        <div class="col-4 col-lg-3 text-center fw-normal">
+                        <div class="col-6 col-lg-5 text-center fst-italic fs-5">
                             {% if theme == "" %}
                                 <div>No Theme</div>
                             {% else %}
                                 <div>Theme: {{ theme }}</div>
                             {% endif %}
                         </div>
-                        <div class="col-4 col-lg-3 text-end fst-italic">
+                        <div class="col-3 col-lg-2 text-end fst-italic fs-6 text-nowrap">
                             {{ date }}
                         </div>
                     </div>
@@ -73,10 +73,10 @@
                         <div class="col-12 col-lg-6 h1 text-center mb-5">Ask a Question</div>
                     </div>
                     <div class="row justify-content-center">
-                        <div class="col-12 col-lg-6">There is no ongoing issue or the deadline for asking questions has passed.</div>
+                        <div class="col-12 col-lg-8 mb-3 fst-italic">There is no ongoing newsletter or the deadline for asking questions has passed.</div>
                     </div>
                     <div class="row justify-content-center">
-                        <div class="col-12 col-lg-6">Go over to <a href="new.html">New Issue</a> to create a new one!</div>
+                        <div class="col-12 col-lg-6">Create a newsletter <a href="/new">here</a>!</div>
                     </div>
                 </div>
             {% endif %}
