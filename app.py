@@ -18,10 +18,15 @@ def main():
     else:
         logged_in = True
         name = g.user.name
-        
-    issue = get_latest_issue(Issue.a_dl)
-    if issue.a_dl >= datetime.now():
-        return render_template("index.html", logged_in=logged_in, name=name,valid=False)
+    
+    ongoing = False
+    ongoing_issue = get_latest_issue(Issue.q_dl)
+    if g.user is not None and ongoing_issue.q_dl > datetime.now() and not db.session.query(User.answered).filter(User.userId == g.user.userId).scalar():
+        ongoing = True        
+    
+    issue = get_latest_issue(Issue.a_dl, datetime.now())
+    if issue is None:
+        return render_template("index.html", logged_in=logged_in, name=name,valid=False, ongoing=True)
     
     qs = get_questions(issue.issueId)
     questions = []
@@ -37,7 +42,7 @@ def main():
     
     return render_template("index.html", logged_in=logged_in, name=name,valid=True,
                             questions=questions, theme=issue.theme, username=get_user(issue.userId).name, date=issue.date.strftime("%Y-%m-%d"),
-                            issueId=issue.issueId, issueName=issue.name
+                            issueId=issue.issueId, issueName=issue.name, ongoing=ongoing
                            )
 
 def login_required(view):
@@ -58,8 +63,11 @@ def load_logged_in_user():
     else:
         g.user = db.session.query(User).filter(User.userId == user_id).first()
 
-def get_latest_issue(date):
-    return db.session.query(Issue).order_by(date.desc()).first()
+def get_latest_issue(date, before=None):
+    if before is None:
+        return db.session.query(Issue).order_by(date.desc()).first()
+    else:
+        return db.session.query(Issue).filter(date < before).order_by(date.desc()).first()
 
 def get_user(userId):
     return db.session.query(User).filter(User.userId == userId).first()
@@ -76,7 +84,7 @@ def get_answers(quesId):
 def new():
     d = get_latest_issue(Issue.q_dl)
     if request.method == "GET":
-        new_issue = not (d is not None and datetime.now() < d.q_dl)
+        new_issue = not (d is not None and datetime.now() <= d.q_dl)
         return render_template("new.html", new_issue=new_issue)
     else:
         # do something  
@@ -194,8 +202,8 @@ def ask():
     if request.method == "GET":
         issue_info = get_latest_issue(Issue.q_dl)
         user = get_user(issue_info.userId)
-        if issue_info is None or issue_info.q_dl < datetime.now():
-            return render_template("ask.html", valid=False)
+        # if issue_info is None or issue_info.q_dl < datetime.now():
+        #     return render_template("ask.html", valid=False)
         return render_template("ask.html",
                                valid=True, name=issue_info.name, 
                                theme=issue_info.theme, issueId=issue_info.issueId,
@@ -241,8 +249,8 @@ def ask():
 def reply():    
     if request.method == "GET":
         # get db for all questions in latest issue
-        issue_info = get_latest_issue(Issue.a_dl)
-        # if issue_info is not None and (issue_info.a_dl < datetime.now() or issue_info.q_dl > datetime.now()):
+        issue_info = get_latest_issue(Issue.q_dl, datetime.now())
+        # if issue_info is not None and (issue_info.a_dl < datetime.now()):
         #     return render_template("reply.html", valid=False)
 
         questions_db = get_questions(issue_info.issueId)
@@ -271,6 +279,9 @@ def reply():
                     quesId = quesId
                 )
                 db.session.add(new_ans)
+            
+            user = db.session.query(User).filter(User.userId == g.user.userId).first()
+            user.answered = True
             db.session.commit()
             message = "success"
         
