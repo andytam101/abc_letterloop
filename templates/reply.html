@@ -18,23 +18,22 @@
             <main>
                 <div class="container mt-5 p-4 border border-bottom-0">
                     <div class="row justify-content-center">
-                        <div class="col-lg-6 col-12 text-center">
+                        <div class="col-lg-12 col-12 text-center mb-2">
                             <h1 class="h1">Issue No. {{ issueId }}: {{ issueName}}</h1>
                         </div>
                     </div>
-                    
-                    <div class="row justify-content-center fw-light">
-                        <div class="col-lg-2 col-4 text-start  fst-italic">
-                            Created by: {{ username }}
+                    <div class="row justify-content-center mt-1 fw-light">
+                        <div class="col-3 col-lg-2 text-start fst-italic fs-6">
+                            <div>Created by: {{ username }}</div>
                         </div>
-                        <div class="col-lg-2 col-4 text-center fw-normal">
+                        <div class="col-6 col-lg-5 text-center fst-italic fs-5">
                             {% if theme == "" %}
-                                No Theme
+                                <div>No Theme</div>
                             {% else %}
-                                Theme: {{ theme }}
+                                <div>Theme: {{ theme }}</div>
                             {% endif %}
                         </div>
-                        <div class="col-lg-2 col-4 text-end  fst-italic">    
+                        <div class="col-3 col-lg-2 text-end fst-italic fs-6 text-nowrap">
                             {{ date }}
                         </div>
                     </div>
