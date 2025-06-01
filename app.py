@@ -1,6 +1,7 @@
 from flask import Flask, g, render_template, request, redirect, jsonify, session
 from datetime import datetime
-from db import db, User, Issue, Question, Answer
+from db import (db, User, Issue, Question, Answer,
+                convert_user_to_dict, convert_issue_to_dict, convert_answer_to_dict, convert_question_to_dict)
 import functools
 
 app = Flask(__name__)
@@ -18,17 +19,17 @@ def main():
     else:
         logged_in = True
         name = g.user.name
-    
+
     ongoing = False
     ongoing_issue = get_latest_issue(Issue.a_dl, datetime.now())
     if g.user is not None and ongoing_issue is not None and ongoing_issue.q_dl > datetime.now() and \
         not db.session.query(User.replied).filter(User.userId == g.user.userId).scalar():
-        ongoing = True        
-    
+        ongoing = True
+
     issue = get_latest_issue(Issue.a_dl, datetime.now())
     if issue is None:
         return render_template("index.html", logged_in=logged_in, name=name,valid=False, ongoing=ongoing)
-    
+
     qs = get_questions(issue.issueId)
     questions = []
     for q in qs:
@@ -38,9 +39,9 @@ def main():
         questions.append({
             "name": get_user(q.userId).name,
             "content": q.content,
-            "answers": this_ans 
+            "answers": this_ans
         })
-    
+
     return render_template("index.html", logged_in=logged_in, name=name,valid=True,
                             questions=questions, theme=issue.theme, username=get_user(issue.userId).name, date=issue.date.strftime("%Y-%m-%d"),
                             issueId=issue.issueId, issueName=issue.name, ongoing=ongoing
@@ -52,7 +53,7 @@ def login_required(view):
         if g.user is None:
             return redirect("/login")
         return view(**kwargs)
-    
+
     return wrapped_view
 
 
@@ -92,14 +93,14 @@ def new():
         try:
             if d is not None and datetime.now() < d.q_dl:
                 return jsonify({"message": "ongoing"})
-            
-            form = request.form                  
+
+            form = request.form
             ques_dl = datetime.strptime(form.get("q-dl"), '%Y-%m-%d')
             ans_dl = datetime.strptime(form.get("a-dl"), '%Y-%m-%d')
-            
+
             if(not (datetime.now() < ques_dl < ans_dl)):
                 return jsonify({"message": "dates"})
-            
+
             # validate dates here
             new_issue = Issue(
                 name = form.get("name"),
@@ -107,21 +108,21 @@ def new():
                 q_dl = ques_dl,
                 a_dl = ans_dl,
                 userId = g.user.userId
-            )    
-            
+            )
+
             db.session.add(new_issue)
 
             users = db.session.query(User).all()
             for user in users:
                 print(user)
                 user.replied = False
-            
+
             db.session.commit()
             message = "success"
         except Exception as e:
             print(e)
             message = "fail"
-        
+
         return jsonify({
             "message": message
         })
@@ -138,28 +139,28 @@ def register():
             for email in emails:
                 if email[0] == request.form.get("email"):
                     raise EmailException
-                    
+
             new_user = User(
                 name = request.form.get("name"),
                 email = request.form.get("email"),
                 password = request.form.get("pw"),
                 replied = False
             )
-            
+
             db.session.add(new_user)
             db.session.commit()
-            
+
             message = "success"
         except EmailException:
             message = "email"
         except Exception as e:
             print(e)
             message = "fail"
-        
+
         return jsonify({
             "message": message
         })
-    
+
 
 @app.route("/login", methods=["GET", "POST"])
 def login():
@@ -200,26 +201,26 @@ def logout():
 
 @app.route("/ask", methods=["GET", "POST"])
 @login_required
-def ask():    
+def ask():
     if request.method == "GET":
         issue_info = get_latest_issue(Issue.q_dl)
         if issue_info is None or issue_info.q_dl < datetime.now():
             return render_template("ask.html", valid=False)
         user = get_user(issue_info.userId)
         return render_template("ask.html",
-                               valid=True, name=issue_info.name, 
+                               valid=True, name=issue_info.name,
                                theme=issue_info.theme, issueId=issue_info.issueId,
-                               username=user.name, date=issue_info.date.strftime("%Y-%m-%d"), 
+                               username=user.name, date=issue_info.date.strftime("%Y-%m-%d"),
                                q_dl=issue_info.q_dl.strftime("%Y-%m-%d")
                                )
     else:
         # do something  
-        try: 
-            jsonData = request.json  
-            questions = jsonData["questions"]      
+        try:
+            jsonData = request.json
+            questions = jsonData["questions"]
             issueId = jsonData["issueId"]
             userId = g.user.userId
-            
+
             if db.session.query(Issue.q_dl).filter(Issue.issueId == issueId).scalar() < datetime.now():
                 return jsonify({
                     "message": "deadline"
@@ -234,21 +235,21 @@ def ask():
                         userId = userId
                     )
                     db.session.add(new_q)
-            
+
                 db.session.commit()
                 message = "success"
         except Exception as e:
             print(e)
             message = "fail"
-              
+
         return jsonify({
             "message": message
         })
-    
+
 
 @app.route("/reply", methods=["GET", "POST"])
 @login_required
-def reply():    
+def reply():
     if request.method == "GET":
         # get db for all questions in latest issue
         issue_info = get_latest_issue(Issue.q_dl, datetime.now())
@@ -263,7 +264,7 @@ def reply():
                 "username": get_user(q.userId).name,
                 "content": q.content
             })
-        
+
         return render_template("reply.html", valid=True, questions=questions, issueId=issue_info.issueId,
                                 a_dl=issue_info.a_dl.strftime("%Y-%m-%d"), date=issue_info.date.strftime("%Y-%m-%d"), username=get_user(issue_info.userId).name,
                                 issueName=issue_info.name, theme=issue_info.theme
@@ -281,18 +282,57 @@ def reply():
                     quesId = quesId
                 )
                 db.session.add(new_ans)
-            
+
             user = db.session.query(User).filter(User.userId == g.user.userId).first()
             user.replied = True
             db.session.commit()
             message = "success"
-        
+
         except Exception as e:
             print(e)
             message = "fail"
 
         return jsonify({
             "message": message
+        })
+
+
+@app.route("/admin", methods=["GET"])
+@login_required
+def admin():
+    return render_template("admin.html")
+
+
+@app.route("/admin-info", methods=["GET", "POST"])
+def admin_info():
+    if request.method == "POST":
+        return redirect("/admin")
+    else:
+        table_name = request.args["tableName"]
+        match table_name:
+            case "User":
+                result = db.session.query(User).all()
+                f = convert_user_to_dict
+            case "Issue":
+                result = db.session.query(Issue).all()
+                f = convert_issue_to_dict
+            case "Question":
+                result = db.session.query(Question).all()
+                f = convert_question_to_dict
+            case "Answer":
+                result = db.session.query(Answer).all()
+                f = convert_answer_to_dict
+            case _:
+                return jsonify({"status": "error", "message": "invalid table name", "tableName": table_name})
+
+
+        result = list(map(f, result))
+        print(result)
+
+        return jsonify({
+            "status": "success",
+            "tableName": table_name,
+            "result": result
         })
 
 

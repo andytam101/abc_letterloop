@@ -35,4 +35,44 @@ class Answer(db.Model):
     content = db.Column(String, nullable=False)
     userId = db.Column(Integer, db.ForeignKey('user.userId'), nullable=False)
     quesId = db.Column(Integer, db.ForeignKey('question.quesId'), nullable=False)
-    
+
+
+
+def convert_user_to_dict(user: User):
+    return {
+        "userId": user.userId,
+        "name": user.name,
+        "email": user.email,
+        "password": user.password,
+        "replied": user.replied,
+    }
+
+
+def convert_question_to_dict(question: Question):
+    return {
+        "quesId": question.quesId,
+        "content": question.content,
+        "issueId": question.issue.issueId,
+        "userId": question.user.userId,
+    }
+
+
+def convert_issue_to_dict(issue: Issue):
+    return {
+        "issueId": issue.issueId,
+        "name": issue.name,
+        "theme": issue.theme,
+        "date": issue.date,
+        "q_dl": issue.q_dl,
+        "a_dl": issue.a_dl,
+        "userId": issue.userId,
+    }
+
+
+def convert_answer_to_dict(answer: Answer):
+    return {
+        "answerId": answer.answerId,
+        "content": answer.content,
+        "userId": answer.userId,
+        "quesId": answer.quesId,
+    }
