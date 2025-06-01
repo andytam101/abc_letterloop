@@ -300,11 +300,22 @@ def reply():
 @app.route("/admin", methods=["GET"])
 @login_required
 def admin():
+    if g.user.userId != 1:
+        return jsonify({
+            "status": "Failed",
+            "message": "Access Denied"
+        })
     return render_template("admin.html")
 
 
 @app.route("/admin-info", methods=["GET", "POST"])
+@login_required
 def admin_info():
+    if g.user.userId != 1:
+        return jsonify({
+            "status": "Failed",
+            "message": "Access Denied"
+        })
     if request.method == "POST":
         return redirect("/admin")
     else:
