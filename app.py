@@ -309,21 +309,20 @@ def admin_info():
         return redirect("/admin")
     else:
         table_name = request.args["tableName"]
-        match table_name:
-            case "User":
-                result = db.session.query(User).all()
-                f = convert_user_to_dict
-            case "Issue":
-                result = db.session.query(Issue).all()
-                f = convert_issue_to_dict
-            case "Question":
-                result = db.session.query(Question).all()
-                f = convert_question_to_dict
-            case "Answer":
-                result = db.session.query(Answer).all()
-                f = convert_answer_to_dict
-            case _:
-                return jsonify({"status": "error", "message": "invalid table name", "tableName": table_name})
+        if table_name == "User":
+            result = db.session.query(User).all()
+            f = convert_user_to_dict
+        elif table_name == "Issue":
+            result = db.session.query(Issue).all()
+            f = convert_issue_to_dict
+        elif table_name == "Question":
+            result = db.session.query(Question).all()
+            f = convert_question_to_dict
+        elif table_name == "Answer":
+            result = db.session.query(Answer).all()
+            f = convert_answer_to_dict
+        else:
+            return jsonify({"status": "error", "message": "invalid table name", "tableName": table_name})
 
 
         result = list(map(f, result))
