@@ -100,7 +100,7 @@ def new():
         new_issue = not (d is not None and datetime.now() <= d.q_dl)
         return render_template("new.html", new_issue=new_issue)
     else:
-        # do something  
+        # do something
         try:
             if d is not None and datetime.now() < d.q_dl:
                 return jsonify({"message": "ongoing"})
@@ -225,7 +225,7 @@ def ask():
                                q_dl=issue_info.q_dl.strftime("%Y-%m-%d")
                                )
     else:
-        # do something  
+        # do something
         try:
             jsonData = request.json
             questions = jsonData["questions"]
@@ -273,7 +273,7 @@ def get_latest_questions():
             "username": get_user(q.userId).name,
             "content": q.content
         })
-    
+
     return jsonify({
         "status": "success",
         "questions": questions
