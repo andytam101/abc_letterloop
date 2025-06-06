@@ -1,6 +1,9 @@
+const controller = new AbortController();
+
 $(() => {
     fetch("/get-latest-questions", {
-        method: "GET"
+        method: "GET",
+        signal: controller.signal
     }).then(
         response => response.json()
     ).then(
@@ -15,6 +18,11 @@ $(() => {
             }
         }
     )
+    
+    // Cancel fetch if any nav link is clicked
+    $("nav a.nav-link").on("click", function () {
+        if (controller) controller.abort();
+    });
 })
 
 $("#f-reply").submit(e => {
