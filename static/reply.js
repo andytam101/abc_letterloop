@@ -6,10 +6,12 @@ $(() => {
     ).then(
         json => {
             if (json.status === "success") {
+                $("#f-reply").html("")
                 json.questions.forEach(q => {
                     const html = addQuestion(q)
                     $("#f-reply").append(html)
                 })
+                $("#submit-btn").removeClass("d-none")
             }
         }
     )

@@ -6,6 +6,7 @@ $(document).ready(() => {
     ).then(
         json => {
             if (json.status === "success") {
+                $("#issue-content-div").html("")
                 json.questions.forEach(q => {
                     const html = addQuestionToContent(q)
                     $("#issue-content-div").append(html)
