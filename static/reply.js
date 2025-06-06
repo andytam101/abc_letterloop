@@ -1,3 +1,20 @@
+$(() => {
+    fetch("/get-latest-questions", {
+        method: "GET"
+    }).then(
+        response => response.json()
+    ).then(
+        json => {
+            if (json.status === "success") {
+                json.questions.forEach(q => {
+                    const html = addQuestion(q)
+                    $("#f-reply").append(html)
+                })
+            }
+        }
+    )
+})
+
 $("#f-reply").submit(e => {
     e.preventDefault()
     var formData = new FormData(e.target)
@@ -21,7 +38,6 @@ $("#f-reply").submit(e => {
             }
         }
     )
-
 })
 
 const disableSubmit = () => {
@@ -38,3 +54,10 @@ const enableSubmit = () => {
     $("#submit-btn").addClass("btn-primary")
 }
 
+const addQuestion = question => {
+    const start = `<div class="form-group mb-3">`
+    const label = `<label class="ms-1" for="q-${question.quesId}"><b>${question.username} asked:</b> ${question.content}</label>`
+    const input = `<input placeholder="Write your reply" class="form-control mt-1" type="text" id="q-${question.quesId}" name="q-${question.quesId}">`
+    const end = "</div>"
+    return start + label + input + end
+}

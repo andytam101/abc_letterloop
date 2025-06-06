@@ -30,6 +30,18 @@ def main():
     if issue is None:
         return render_template("index.html", logged_in=logged_in, name=name,valid=False, ongoing=ongoing)
 
+    return render_template("index.html", logged_in=logged_in, name=name,valid=True,
+                            theme=issue.theme, username=get_user(issue.userId).name, date=issue.date.strftime("%Y-%m-%d"),
+                            issueId=issue.issueId, issueName=issue.name, ongoing=ongoing
+                           )
+
+@app.route("/get-latest-issue", methods=["GET"])
+def get_latest_issue():
+    issue = get_latest_issue(Issue.a_dl, datetime.now())
+    if issue is None:
+        return jsonify({
+            "status": "fail"
+        })
     qs = get_questions(issue.issueId)
     questions = []
     for q in qs:
@@ -41,11 +53,10 @@ def main():
             "content": q.content,
             "answers": this_ans
         })
-
-    return render_template("index.html", logged_in=logged_in, name=name,valid=True,
-                            questions=questions, theme=issue.theme, username=get_user(issue.userId).name, date=issue.date.strftime("%Y-%m-%d"),
-                            issueId=issue.issueId, issueName=issue.name, ongoing=ongoing
-                           )
+    return jsonify({
+        "status": "success",
+        "questions": questions
+    })
 
 def login_required(view):
     @functools.wraps(view)
@@ -246,6 +257,29 @@ def ask():
             "message": message
         })
 
+@app.route("/get-latest-questions", methods=["GET"])
+def get_latest_questions():
+    issue_info = get_latest_issue(Issue.q_dl, datetime.now())
+    if issue_info is None or (issue_info.a_dl < datetime.now()):
+        return jsonify({
+            "status": "fail"
+        })
+
+    questions_db = get_questions(issue_info.issueId)
+    questions = []
+    for q in questions_db:
+        questions.append({
+            "quesId": q.quesId,
+            "username": get_user(q.userId).name,
+            "content": q.content
+        })
+    
+    return jsonify({
+        "status": "success",
+        "questions": questions
+    })
+
+
 
 @app.route("/reply", methods=["GET", "POST"])
 @login_required
@@ -256,16 +290,7 @@ def reply():
         if issue_info is None or (issue_info.a_dl < datetime.now()):
             return render_template("reply.html", valid=False)
 
-        questions_db = get_questions(issue_info.issueId)
-        questions = []
-        for q in questions_db:
-            questions.append({
-                "quesId": q.quesId,
-                "username": get_user(q.userId).name,
-                "content": q.content
-            })
-
-        return render_template("reply.html", valid=True, questions=questions, issueId=issue_info.issueId,
+        return render_template("reply.html", valid=True, issueId=issue_info.issueId,
                                 a_dl=issue_info.a_dl.strftime("%Y-%m-%d"), date=issue_info.date.strftime("%Y-%m-%d"), username=get_user(issue_info.userId).name,
                                 issueName=issue_info.name, theme=issue_info.theme
                                 )
@@ -355,6 +380,3 @@ def previous():
 db.init_app(app)
 with app.app_context():
     db.create_all()
-
-
-app.run(debug=True)
