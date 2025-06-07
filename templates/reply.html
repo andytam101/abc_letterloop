@@ -42,7 +42,7 @@
                             <form id="f-reply">
                                 {% for q in questions %}
                                     <div class="form-group mb-3">
-                                        <label class="ms-1" for="q-{{ q['quesId'] }}"><b>{{ q['username'] }} asked:</b> {{ q['content'] }}</label>
+                                        <label class="ms-1" for="q-{{ q['quesId'] }}"><b>{{ q['username'] }} asked:</b> <span id="q-content-{{ q['quesId'] }}">{{ q['content'] }}</span></label>
                                         <input placeholder="Write your reply" class="form-control mt-1" type="text" id="q-{{ q['quesId'] }}" name="q-{{ q['quesId'] }}">
                                     </div>
                                 {% endfor %}
@@ -88,6 +88,13 @@
                 </div>
             </div>
         </footer>
+        <script>
+            const qs = {{ questions | tojson }}
+            qs.forEach(q => {
+                const qId = q.quesId
+                $(`#q-content-${qId}`).html(q.content)
+            });
+        </script>
         <script src="../static/reply.js" async defer></script>
     </body>
 </html>

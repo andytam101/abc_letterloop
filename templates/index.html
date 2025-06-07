@@ -74,7 +74,7 @@
                             {% for q in questions %}
                                 <div class="row border rounded-3 bg-light mb-3 pt-2 pb-2">
                                     <div class="pb-2 mb-2 col-12 col-lg-12 fst-italic fs-5 me-1 border-bottom">
-                                        <b>{{ q['name'] }} asked:</b> {{ q['content'] }}
+                                        <b>{{ q['name'] }} asked: </b><span id="q-content-{{ q['id'] }}"></span>
                                     </div>
                                     <div>
                                         {% for a in q['answers'] %}
@@ -97,6 +97,13 @@
                 </div>
             {% endif %}
         </main>
-        <script src="../static/index.js" async defer></script>
+        <script>
+            const qs = {{ questions | tojson }}
+            console.log(qs)
+            qs.forEach(q => {
+                const qId = q.id
+                $(`#q-content-${qId}`).html(q.content)
+            });
+        </script>
     </body>
 </html>

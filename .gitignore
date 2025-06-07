@@ -1,3 +1,7 @@
 .idea/
 data.db
 instance/
+
+.vscode/
+__pycache__/
+run.py
