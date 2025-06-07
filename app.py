@@ -30,18 +30,6 @@ def main():
     if issue is None:
         return render_template("index.html", logged_in=logged_in, name=name,valid=False, ongoing=ongoing)
 
-    return render_template("index.html", logged_in=logged_in, name=name,valid=True,
-                            theme=issue.theme, username=get_user(issue.userId).name, date=issue.date.strftime("%Y-%m-%d"),
-                            issueId=issue.issueId, issueName=issue.name, ongoing=ongoing
-                           )
-
-@app.route("/get-latest-issue", methods=["GET"])
-def get_latest_issue():
-    issue = get_latest_issue(Issue.a_dl, datetime.now())
-    if issue is None:
-        return jsonify({
-            "status": "fail"
-        })
     qs = get_questions(issue.issueId)
     questions = []
     for q in qs:
@@ -54,10 +42,10 @@ def get_latest_issue():
             "content": q.content,
             "answers": this_ans
         })
-    return jsonify({
-        "status": "success",
-        "questions": questions
-    })
+    return render_template("index.html", logged_in=logged_in, name=name,valid=True,
+                            theme=issue.theme, username=get_user(issue.userId).name, date=issue.date.strftime("%Y-%m-%d"),
+                            issueId=issue.issueId, issueName=issue.name, ongoing=ongoing, questions=questions
+                           )
 
 def login_required(view):
     @functools.wraps(view)
@@ -291,9 +279,18 @@ def reply():
         if issue_info is None or (issue_info.a_dl < datetime.now()):
             return render_template("reply.html", valid=False)
 
+    questions_db = get_questions(issue_info.issueId)
+    questions = []
+    for q in questions_db:
+        questions.append({
+            "quesId": q.quesId,
+            "username": get_user(q.userId).name,
+            "content": q.content
+        })
+
         return render_template("reply.html", valid=True, issueId=issue_info.issueId,
                                 a_dl=issue_info.a_dl.strftime("%Y-%m-%d"), date=issue_info.date.strftime("%Y-%m-%d"), username=get_user(issue_info.userId).name,
-                                issueName=issue_info.name, theme=issue_info.theme
+                                issueName=issue_info.name, theme=issue_info.theme, questions=questions
                                 )
     else:
         try:

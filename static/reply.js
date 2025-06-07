@@ -1,30 +1,3 @@
-const controller = new AbortController();
-
-$(() => {
-    fetch("/get-latest-questions", {
-        method: "GET",
-        signal: controller.signal
-    }).then(
-        response => response.json()
-    ).then(
-        json => {
-            if (json.status === "success") {
-                $("#f-reply").html("")
-                json.questions.forEach(q => {
-                    const html = addQuestion(q)
-                    $("#f-reply").append(html)
-                })
-                $("#submit-btn").removeClass("d-none")
-            }
-        }
-    )
-    
-    // Cancel fetch if any nav link is clicked
-    $("nav a.nav-link").on("click", function () {
-        if (controller) controller.abort();
-    });
-})
-
 $("#f-reply").submit(e => {
     e.preventDefault()
     var formData = new FormData(e.target)
@@ -62,12 +35,4 @@ const enableSubmit = () => {
     $("#submit-btn").prop("disabled", false)
     $("#submit-btn").removeClass("btn-secondary")
     $("#submit-btn").addClass("btn-primary")
-}
-
-const addQuestion = question => {
-    const start = `<div class="form-group mb-3">`
-    const label = `<label class="ms-1" for="q-${question.quesId}"><b>${question.username} asked:</b> ${question.content}</label>`
-    const input = `<input placeholder="Write your reply" class="form-control mt-1" type="text" id="q-${question.quesId}" name="q-${question.quesId}">`
-    const end = "</div>"
-    return start + label + input + end
 }

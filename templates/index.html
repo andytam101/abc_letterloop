@@ -99,7 +99,6 @@
         </main>
         <script>
             const qs = {{ questions | tojson }}
-            console.log(qs)
             qs.forEach(q => {
                 const qId = q.id
                 $(`#q-content-${qId}`).html(q.content)
