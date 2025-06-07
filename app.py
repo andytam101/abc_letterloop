@@ -279,14 +279,14 @@ def reply():
         if issue_info is None or (issue_info.a_dl < datetime.now()):
             return render_template("reply.html", valid=False)
 
-    questions_db = get_questions(issue_info.issueId)
-    questions = []
-    for q in questions_db:
-        questions.append({
-            "quesId": q.quesId,
-            "username": get_user(q.userId).name,
-            "content": q.content
-        })
+        questions_db = get_questions(issue_info.issueId)
+        questions = []
+        for q in questions_db:
+            questions.append({
+                "quesId": q.quesId,
+                "username": get_user(q.userId).name,
+                "content": q.content
+            })
 
         return render_template("reply.html", valid=True, issueId=issue_info.issueId,
                                 a_dl=issue_info.a_dl.strftime("%Y-%m-%d"), date=issue_info.date.strftime("%Y-%m-%d"), username=get_user(issue_info.userId).name,
