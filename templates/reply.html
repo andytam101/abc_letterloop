@@ -40,7 +40,12 @@
                     <div class="row justify-content-center mt-4">
                         <div class="col-12 col-lg-9 border pt-3 mt-1">
                             <form id="f-reply">
-                                <p class="text-secondary text-center h5 fw-light fst-italic">Loading...</p>
+                                {% for q in questions %}
+                                    <div class="form-group mb-3">
+                                        <label class="ms-1" for="q-{{ q['quesId'] }}"><b>{{ q['username'] }} asked:</b> <span id="q-content-{{ q['quesId'] }}">{{ q['content'] }}</span></label>
+                                        <input placeholder="Write your reply" class="form-control mt-1" type="text" id="q-{{ q['quesId'] }}" name="q-{{ q['quesId'] }}">
+                                    </div>
+                                {% endfor %}
                             </form>
                             <div class="d-grid col-12 mt-4">
                                 <button id="submit-btn" form="f-reply" class="btn btn-primary mb-3 d-none" type="submit">Submit</button>
@@ -83,6 +88,13 @@
                 </div>
             </div>
         </footer>
+        <script>
+            const qs = {{ questions | tojson }}
+            qs.forEach(q => {
+                const qId = q.quesId
+                $(`#q-content-${qId}`).html(q.content)
+            });
+        </script>
         <script src="../static/reply.js" async defer></script>
     </body>
 </html>

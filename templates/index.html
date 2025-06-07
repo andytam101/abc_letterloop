@@ -70,8 +70,19 @@
                         </div>
                     </div>
                     <div class="row justify-content-center mt-4">
-                        <div class="col-12 col-lg-9 pt-3 ps-4 pe-4" id="issue-content-div">
-                            <p class="text-secondary text-center h5 fw-light fst-italic">Loading...</p>
+                        <div class="col-12 col-lg-9 pt-3 ps-4 pe-4">
+                            {% for q in questions %}
+                                <div class="row border rounded-3 bg-light mb-3 pt-2 pb-2">
+                                    <div class="pb-2 mb-2 col-12 col-lg-12 fst-italic fs-5 me-1 border-bottom">
+                                        <b>{{ q['name'] }} asked: </b><span id="q-content-{{ q['id'] }}"></span>
+                                    </div>
+                                    <div>
+                                        {% for a in q['answers'] %}
+                                            <div><b style="color:darkslateblue">{{ a['name'] }}</b>: {{ a['content'] }}</div>
+                                        {% endfor %}
+                                    </div>
+                                </div>
+                            {% endfor %}
                         </div>
                     </div>
                 </article>
@@ -86,6 +97,13 @@
                 </div>
             {% endif %}
         </main>
-        <script src="../static/index.js" async defer></script>
+        <script>
+            const qs = {{ questions | tojson }}
+            console.log(qs)
+            qs.forEach(q => {
+                const qId = q.id
+                $(`#q-content-${qId}`).html(q.content)
+            });
+        </script>
     </body>
 </html>

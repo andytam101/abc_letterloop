@@ -49,6 +49,7 @@ def get_latest_issue():
         for a in get_answers(q.quesId):
             this_ans.append({"name": get_user(a.userId).name, "content": a.content})
         questions.append({
+            "id": q.quesId,
             "name": get_user(q.userId).name,
             "content": q.content,
             "answers": this_ans
